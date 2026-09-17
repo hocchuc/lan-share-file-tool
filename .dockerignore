@@ -1,0 +1,14 @@
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.git
+.gitignore
+.dockerignore
+.DS_Store
+uploads/
+flutter_app/
+.github/
+.idea/
+.vscode/
+README.md

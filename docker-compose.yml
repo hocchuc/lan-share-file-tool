@@ -1,0 +1,20 @@
+services:
+  lan-file-share:
+    build: .
+    container_name: lan-file-share
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      # Mount host directory so uploaded files and persistent notes are preserved across container restarts
+      - ./uploads:/app/uploads
+    environment:
+      - PORT=8080
+      - BIND_HOST=0.0.0.0
+      # Optional: Explicitly specify your computer's LAN / Wi-Fi IP (e.g. 192.168.1.100)
+      # so terminal logs and QR code show your reachable host IP instead of container internal IP.
+      # - LAN_IP=192.168.1.100
+
+    # Optional on Linux: You can uncomment network_mode: host for automatic LAN IP detection without port mapping.
+    # Note: If using host networking, comment out the ports section above.
+    # network_mode: host

@@ -1,0 +1,25 @@
+stages:
+  - test
+  - docker
+
+python-syntax:
+  stage: test
+  image: python:3.12-alpine
+  script:
+    - python -m py_compile server.py port_scanner.py
+    - python port_scanner.py --help
+    - python server.py --help || true
+
+docker-build-test:
+  stage: docker
+  image: docker:27
+  services:
+    - docker:27-dind
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - docker build -t lan-file-share:test .
+    - docker run -d -p 8080:8080 --name test-server lan-file-share:test
+    - sleep 4
+    - docker run --network host curlimages/curl:latest curl --fail -s http://127.0.0.1:8080/api/files
+    - docker stop test-server
